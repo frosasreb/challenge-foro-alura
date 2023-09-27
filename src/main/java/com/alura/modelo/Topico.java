@@ -1,24 +1,64 @@
 package com.alura.modelo;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import com.alura.modelo.curso.Curso;
+import com.alura.modelo.usuario.Usuario;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
+
+@Table(name = "topicos")
+@Entity(name = "Topico")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Topico {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	private String titulo;
 	private String mensaje;
 	private LocalDateTime fechaCreacion = LocalDateTime.now();
+	@Enumerated(EnumType.STRING)
+	@Column(name = "estatus")
 	private StatusTopico status = StatusTopico.NO_RESPONDIDO;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "autor_id")
 	private Usuario autor;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "curso_id")
 	private Curso curso;
-	private List<Respuesta> respuestas = new ArrayList<>();
+	//private List<Respuesta> respuestas = new ArrayList<>();
 
 	public Topico(String titulo, String mensaje, Curso curso) {
 		this.titulo = titulo;
 		this.mensaje = mensaje;
 		this.curso = curso;
+	}
+
+	public Topico(DatosRegistroTopico datosRegistroTopico, Usuario usuario, Curso curso) {
+
+		this.titulo = datosRegistroTopico.titulo();
+		this.mensaje = datosRegistroTopico.mensaje();
+		this.fechaCreacion = LocalDateTime.now();
+		this.status = StatusTopico.NO_RESPONDIDO;
+		this.autor = usuario;
+		this.curso = curso;
+	}
+
+	public void actualizarDatos(DatosActualizarTopico datosActualizarTopico) {
+		if (datosActualizarTopico.titulo() != null){
+			this.titulo = datosActualizarTopico.titulo();
+		}
+		if (datosActualizarTopico.mensaje() != null){
+			this.mensaje = datosActualizarTopico.mensaje();
+		}
 	}
 
 	@Override
@@ -102,12 +142,12 @@ public class Topico {
 		this.curso = curso;
 	}
 
-	public List<Respuesta> getRespuestas() {
-		return respuestas;
-	}
+	//public List<Respuesta> getRespuestas() {
+	//	return respuestas;
+	//}
 
-	public void setRespuestas(List<Respuesta> respuestas) {
-		this.respuestas = respuestas;
-	}
+	//public void setRespuestas(List<Respuesta> respuestas) {
+	//	this.respuestas = respuestas;
+	//}
 
 }

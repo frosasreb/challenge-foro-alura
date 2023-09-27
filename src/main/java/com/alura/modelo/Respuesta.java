@@ -1,5 +1,7 @@
 package com.alura.modelo;
 
+import com.alura.modelo.usuario.Usuario;
+
 import java.time.LocalDateTime;
 
 public class Respuesta {
